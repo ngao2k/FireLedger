@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "334717573006",
+    "project_id": "fireledger-8e1ec",
+    "storage_bucket": "fireledger-8e1ec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334717573006:android:7045bc33e555c76847b6df",
+        "android_client_info": {
+          "package_name": "com.example.fireledger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "334717573006-6jap474m201i23aub2p1ssde1lk23qv9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fireledger",
+            "certificate_hash": "1b656e31ebd24847b01c699a1a5b9b413d33bc77"
+          }
+        },
+        {
+          "client_id": "334717573006-rklie7c9m9rcctpagika0mk0d256ij48.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPR71a6oLYqMuwb0MdsfHvbtF-f6_ec_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "334717573006-26ms2ph6thmchdcir2ittlj1vaug0u3r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
