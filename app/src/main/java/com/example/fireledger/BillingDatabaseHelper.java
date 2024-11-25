@@ -155,28 +155,34 @@ public class BillingDatabaseHelper extends SQLiteOpenHelper {
         return billingList;
     }
 
-    public void deleteBilling(BillingItem item) {
-        SQLiteDatabase db = null;
+   public void deleteBilling(BillingItem item) {
+    SQLiteDatabase db = null;
 
-        try {
-            db = this.getWritableDatabase();
-            int rowsAffected = db.delete(TABLE_BILLINGS,
-                    COLUMN_DATE + "=? AND " + COLUMN_TYPE + "=? AND " + COLUMN_AMOUNT + "=? AND " + COLUMN_DESCRIPTION + "=?",
-                    new String[]{item.getDate(), item.getType(), item.getAmount(), item.getDescription()});
+    try {
+        db = this.getWritableDatabase();
+        db.beginTransaction();
 
-            if (rowsAffected > 0) {
-                Log.d(TAG, "Billing record deleted successfully");
-            } else {
-                Log.w(TAG, "No billing record found to delete");
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error deleting billing record", e);
-        } finally {
-            if (db != null) {
-                db.close();
-            }
+        String description = item.getDescription() == null ? "" : item.getDescription();
+        int rowsAffected = db.delete(TABLE_BILLINGS,
+                COLUMN_DATE + "=? AND " + COLUMN_TYPE + "=? AND " + COLUMN_AMOUNT + "=? AND " + COLUMN_DESCRIPTION + "=?",
+                new String[]{item.getDate(), item.getType(), item.getAmount(), description});
+
+        if (rowsAffected > 0) {
+            db.setTransactionSuccessful();
+            Log.d(TAG, "Billing record deleted successfully");
+        } else {
+            Log.w(TAG, "No billing record found to delete");
+        }
+    } catch (Exception e) {
+        Log.e(TAG, "Error deleting billing record", e);
+    } finally {
+        if (db != null) {
+            db.endTransaction();
+            db.close();
         }
     }
+}
+
 
     public List<String> getAvailableMonths() {
         List<String> months = new ArrayList<>();

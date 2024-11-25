@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -9,6 +10,7 @@
     <!-- 标题 -->
     <TextView
         android:id="@+id/titleText"
+        android:fontFamily="@font/zhishuai"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Billings"
@@ -50,29 +52,29 @@
 </ScrollView>
 
 
+    <!-- 添加按钮 -->
     <TextView
         android:id="@+id/needReportText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:text="Need a Report?"
-        android:textSize="16sp"
+        android:fontFamily="@font/zhishuai"
         android:textColor="@color/light_blue"
-        android:layout_marginBottom="16dp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/addButton"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- 添加按钮 -->
     <ImageButton
         android:id="@+id/addButton"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="132dp"
+        android:layout_height="124dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/circle_button"
         android:scaleType="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        android:layout_marginBottom="24dp" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -50,12 +50,13 @@
             <!-- 标题 -->
             <TextView
                 android:id="@+id/loginTitle"
+                android:fontFamily="@font/zhishuai"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_title"
                 android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
+
+                android:textColor="@color/green"
                 android:layout_gravity="center_horizontal" />
 
             <!-- 间距 -->
@@ -70,6 +71,7 @@
                 android:layout_height="45dp"
                 android:background="@drawable/edit_text_background"
                 android:hint="@string/login_email_hint"
+                android:fontFamily="@font/zhishuai"
                 android:inputType="textEmailAddress"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp" />
@@ -82,6 +84,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/edit_text_background"
                 android:hint="@string/login_password_hint"
+                android:fontFamily="@font/zhishuai"
                 android:inputType="textPassword"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp" />
@@ -89,10 +92,11 @@
             <!-- 登录按钮 -->
             <Button
                 android:id="@+id/loginButton"
+                android:fontFamily="@font/zhishuai"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:text="@string/login_button"
-                android:backgroundTint="@color/primaryColor"
+                android:backgroundTint="@color/green"
                 android:textColor="@color/white"
                 android:layout_marginTop="24dp" />
 
@@ -114,10 +118,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/register_now"
-                android:textColor="@color/primaryColor"
-                android:textStyle="bold"
+                android:fontFamily="@font/zhishuai"
+                android:textColor="@color/green"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="16dp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

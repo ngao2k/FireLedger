@@ -8,13 +8,13 @@
     <!-- 标题 -->
     <TextView
         android:id="@+id/titleText"
+        android:fontFamily="@font/zhishuai"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Financial Habit Analysis"
         android:textColor="@color/green"
         android:textSize="28sp"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -37,6 +37,7 @@
             android:gravity="start"
             android:padding="16dp"
             android:text="结果正在分析"
+            android:fontFamily="@font/zhishuai"
             android:textColor="@color/black"
             android:textSize="18sp" />
     </ScrollView>
@@ -47,12 +48,14 @@
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_margin="16dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="@color/green"
         android:text="Back"
+        android:fontFamily="@font/zhishuai"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
