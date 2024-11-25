@@ -28,7 +28,7 @@
 
         <!-- SplashActivity作为启动页 -->
         <activity
-            android:name=".TestActivity"
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,6 +50,12 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
+
+       <!-- LLMActivity作为普通Activity -->
+        <activity
+            android:name=".LLMActivity"
+            android:exported="false" />
+
 
         <!-- TestActivity作为普通Activity -->
     </application>

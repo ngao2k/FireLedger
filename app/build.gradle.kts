@@ -41,6 +41,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.firebase.database)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -55,5 +56,14 @@ dependencies {
 
     // 网络请求依赖
     implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+
+    // SQLite依赖
+    implementation ("androidx.sqlite:sqlite:2.3.1")
+
+    // RecyclerView依赖
+    implementation("androidx.recyclerview:recyclerview:1.3.1")
+
+    // Markdown依赖
+    implementation("io.noties.markwon:core:4.6.2")
 
 }
