@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <!-- 加号的竖条 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M40,20 h20 v60 h-20 z"
+        android:strokeWidth="0"
+        android:strokeLineJoin="round" />
+    <!-- 加号的横条 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M20,40 h60 v20 h-60 z"
+        android:strokeWidth="0"
+        android:strokeLineJoin="round" />
+</vector>

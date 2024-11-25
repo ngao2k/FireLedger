@@ -30,8 +30,19 @@
         <item>Income</item>
         <item>Expense</item>
     </string-array>
+    <string name="main_title">账单</string>
+    <string name="main_report">需要分析报告？</string>
+
+    <!-- AddBilling 添加账单 -->
+    <string name="addbilling_selectdate">选择日期</string>
+    <string name="addbilling_amount">输入金额</string>
+    <string name="addbilling_description">用途描述</string>
+    <string name="addbilling_save">保存</string>
 
 
+    <!-- LLM -->
+    <string name="llm_process">结果正在分析</string>
+    <string name="llm_btn">返回</string>
 
 
 </resources>

@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:gravity="start"
             android:padding="16dp"
-            android:text="结果正在分析"
+            android:text="@string/llm_process"
             android:fontFamily="@font/zhishuai"
             android:textColor="@color/black"
             android:textSize="18sp" />
@@ -50,7 +50,7 @@
         android:layout_margin="16dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/green"
-        android:text="Back"
+        android:text="@string/llm_btn"
         android:fontFamily="@font/zhishuai"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
