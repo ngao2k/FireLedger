@@ -7,42 +7,38 @@
     <string name="DOMAIN">lite</string>
     <string name="URL">wss://spark-api.xf-yun.com/v1.1/chat</string>
 
-
-    <!-- Login 登陆 -->
-    <string name="login_title">登陆</string>
-    <string name="login_email_hint">邮箱</string>
-    <string name="login_password_hint">密码</string>
-    <string name="login_button">登陆</string>
-    <string name="register_now">立即注册</string>
-    <!-- Google 登陆 -->
+    <!-- Login -->
+    <string name="login_title">Login</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button">Login</string>
+    <string name="register_now">Register Now</string>
+    <!-- Google Login -->
     <string name="default_web_client_id">AIzaSyDPR71a6oLYqMuwb0MdsfHvbtF-f6_ec_4</string>
 
-    <!-- Register 注册 -->
-    <string name="register_title">注册</string>
-    <string name="register_email_hint">请输入邮箱</string>
-    <string name="register_password_hint">请输入密码</string>
-    <string name="register_confirm_password_hint">确认密码</string>
-    <string name="register_button">注册</string>
-    <string name="already_have_account">已有账号？立即登录</string>
+    <!-- Register -->
+    <string name="register_title">Register</string>
+    <string name="register_email_hint">Enter Email</string>
+    <string name="register_password_hint">Enter Password</string>
+    <string name="register_confirm_password_hint">Confirm Password</string>
+    <string name="register_button">Register</string>
+    <string name="already_have_account">Already have an account? Login now</string>
 
-    <!-- MainPage 主页 -->
+    <!-- MainPage -->
     <string-array name="transaction_types">
         <item>Income</item>
         <item>Expense</item>
     </string-array>
-    <string name="main_title">账单</string>
-    <string name="main_report">需要分析报告？</string>
+    <string name="main_title">Ledger</string>
+    <string name="main_report">Need an analysis report?</string>
 
-    <!-- AddBilling 添加账单 -->
-    <string name="addbilling_selectdate">选择日期</string>
-    <string name="addbilling_amount">输入金额</string>
-    <string name="addbilling_description">用途描述</string>
-    <string name="addbilling_save">保存</string>
-
+    <!-- AddBilling -->
+    <string name="addbilling_selectdate">Select Date</string>
+    <string name="addbilling_amount">Enter Amount</string>
+    <string name="addbilling_description">Description</string>
+    <string name="addbilling_save">Save</string>
 
     <!-- LLM -->
-    <string name="llm_process">结果正在分析</string>
-    <string name="llm_btn">返回</string>
-
-
+    <string name="llm_process">Result is being analyzed</string>
+    <string name="llm_btn">Back</string>
 </resources>

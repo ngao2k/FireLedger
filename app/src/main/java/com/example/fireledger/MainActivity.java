@@ -27,82 +27,115 @@ import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
-    private BillingAdapter adapter;
-    private List<BillingItem> billingList;
-    private BillingDatabaseHelper databaseHelper;
 
+    // RecyclerView to display the list of billings.
+    private RecyclerView recyclerView;
+    // Database helper class for interacting with the billing database.
+    private BillingDatabaseHelper databaseHelper;
+    // List of billings, storing the billing information retrieved from the database.
+    private List<BillingItem> billingList;
+    // Adapter for the RecyclerView to update the displayed list of billings.
+    private BillingAdapter adapter;
+
+    /**
+     * Initialization method called when the activity is created.
+     * @param savedInstanceState The saved instance state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize the RecyclerView and set its layout manager.
         recyclerView = findViewById(R.id.billingList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // 初始化数据库
+        // Initialize the database helper and fetch the list of billings.
         databaseHelper = new BillingDatabaseHelper(this);
-
-        // 从数据库加载数据
         billingList = databaseHelper.getAllBillings();
+        // Create and set the adapter for the RecyclerView.
         adapter = new BillingAdapter(billingList);
         recyclerView.setAdapter(adapter);
 
-        // 添加左滑删除功能
+        // Add swipe-to-delete functionality.
         addSwipeToDelete();
 
+        // Set click listener for the add billing button.
         findViewById(R.id.addButton).setOnClickListener(view -> showAddBillingDialog());
         findViewById(R.id.needReportText).setOnClickListener(view -> {
-            // 跳转到报告页面
+            // Navigate to the report page.
             startActivity(new Intent(MainActivity.this, LLMActivity.class));
         });
     }
 
+    /**
+     * Method to add swipe-to-delete functionality to the RecyclerView.
+     */
     private void addSwipeToDelete() {
+        // Create an ItemTouchHelper instance to handle swipe events.
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            // Disable move functionality by returning false.
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false; // 不支持拖动排序
+                return false;
             }
 
+            /**
+             * Handle swiping a billing item to delete it.
+             * @param viewHolder The ViewHolder that was swiped.
+             * @param direction The direction of the swipe.
+             */
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                // Get the position and the billing item of the swiped view.
                 int position = viewHolder.getAdapterPosition();
                 BillingItem item = billingList.get(position);
 
-                // 从数据库中删除
+                // Delete the billing item from the database.
                 databaseHelper.deleteBilling(item);
-
-                // 从列表中删除
+                // Remove the item from the list and notify the adapter.
                 billingList.remove(position);
                 adapter.notifyItemRemoved(position);
 
+                // Show a toast message indicating the item has been deleted.
                 Toast.makeText(MainActivity.this, "Deleted: " + item.getType() + " - " + item.getAmount(), Toast.LENGTH_SHORT).show();
             }
 
+            /**
+             * Draw the background and icon during swipe action.
+             * @param c Canvas to draw on.
+             * @param recyclerView The RecyclerView.
+             * @param viewHolder The ViewHolder.
+             * @param dX Amount of horizontal scroll.
+             * @param dY Amount of vertical scroll.
+             * @param actionState State of the swipe action.
+             * @param isCurrentlyActive Whether the action is currently active.
+             */
             @Override
-            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
-                                    @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
-                                    int actionState, boolean isCurrentlyActive) {
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    // Set the paint color to red.
                     Paint paint = new Paint();
                     paint.setColor(Color.RED);
-                    float itemViewTop = viewHolder.itemView.getTop();
-                    float itemViewBottom = viewHolder.itemView.getBottom();
-                    float itemViewRight = viewHolder.itemView.getRight();
-                    float itemViewLeft = itemViewRight + dX;
 
-                    c.drawRect(itemViewLeft, itemViewTop, itemViewRight, itemViewBottom, paint);
+                    // Get the position of the view.
+                    float top = viewHolder.itemView.getTop();
+                    float bottom = viewHolder.itemView.getBottom();
+                    float right = viewHolder.itemView.getRight();
+                    float left = right + dX;
 
-                    // 添加删除图标
-                    int iconMargin = (viewHolder.itemView.getHeight() - 64) / 2;
-                    int iconLeft = (int) (itemViewRight - iconMargin - 64);
-                    int iconTop = (int) (itemViewTop + iconMargin);
-                    int iconRight = (int) (itemViewRight - iconMargin);
-                    int iconBottom = (int) (itemViewBottom - iconMargin);
+                    // Draw a red rectangle as background.
+                    c.drawRect(left, top, right, bottom, paint);
 
+                    // Load and set the position of the delete icon.
                     Drawable icon = ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_delete);
                     if (icon != null) {
+                        int iconMargin = (viewHolder.itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
+                        int iconTop = (int) top + iconMargin;
+                        int iconBottom = (int) bottom - iconMargin;
+                        int iconLeft = (int) right - iconMargin - icon.getIntrinsicWidth();
+                        int iconRight = (int) right - iconMargin;
+
                         icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
                         icon.draw(c);
                     }
@@ -111,69 +144,81 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Attach the ItemTouchHelper to the RecyclerView.
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
+    /**
+     * Method to show the dialog for adding a new billing item.
+     */
     private void showAddBillingDialog() {
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    LayoutInflater inflater = getLayoutInflater();
-    View dialogView = inflater.inflate(R.layout.dialog_add_billing, null);
-    builder.setView(dialogView);
+        // Create an AlertDialog.Builder and layout inflater.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_add_billing, null);
+        builder.setView(dialogView);
 
-    Button datePickerButton = dialogView.findViewById(R.id.datePickerButton);
-    Spinner typeSpinner = dialogView.findViewById(R.id.typeSpinner);
-    EditText amountInput = dialogView.findViewById(R.id.amountInput);
-    EditText descriptionInput = dialogView.findViewById(R.id.descriptionText);
-    Button saveButton = dialogView.findViewById(R.id.saveButton);
+        // Initialize views within the dialog.
+        Button datePickerButton = dialogView.findViewById(R.id.datePickerButton);
+        Spinner typeSpinner = dialogView.findViewById(R.id.typeSpinner);
+        EditText amountInput = dialogView.findViewById(R.id.amountInput);
+        EditText descriptionInput = dialogView.findViewById(R.id.descriptionText);
+        Button saveButton = dialogView.findViewById(R.id.saveButton);
 
-    final String[] selectedDate = {""};
-    datePickerButton.setOnClickListener(view -> {
-        Calendar calendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
-                (datePicker, year, month, dayOfMonth) -> {
-                    selectedDate[0] = year + "-" + (month + 1) + "-" + dayOfMonth;
-                    datePickerButton.setText(selectedDate[0]);
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-        );
-        datePickerDialog.show();
-    });
+        // Store the selected date.
+        final String[] selectedDate = {""};
+        // Set a click listener for the date picker button.
+        datePickerButton.setOnClickListener(view -> {
+            // Create a DatePickerDialog and handle the date selection event.
+            Calendar calendar = Calendar.getInstance();
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    this,
+                    (datePicker, year, month, dayOfMonth) -> {
+                        selectedDate[0] = year + "-" + (month + 1) + "-" + dayOfMonth;
+                        datePickerButton.setText(selectedDate[0]);
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+            );
+            datePickerDialog.show();
+        });
 
-    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-            this, R.array.transaction_types, android.R.layout.simple_spinner_item);
-    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    typeSpinner.setAdapter(adapter);
+        // Initialize the type selection spinner.
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.transaction_types, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        typeSpinner.setAdapter(adapter);
 
-    AlertDialog dialog = builder.create();
-    saveButton.setOnClickListener(view -> {
-        String date = selectedDate[0];
-        String type = typeSpinner.getSelectedItem().toString();
-        String amount = amountInput.getText().toString();
-        String description = descriptionInput.getText().toString();
+        // Create and display the dialog.
+        AlertDialog dialog = builder.create();
+        // Set a click listener for the save button.
+        saveButton.setOnClickListener(view -> {
+            // Retrieve the entered billing details.
+            String date = selectedDate[0];
+            String type = typeSpinner.getSelectedItem().toString();
+            String amount = amountInput.getText().toString();
+            String description = descriptionInput.getText().toString();
 
-        if (date.isEmpty() || type.isEmpty() || amount.isEmpty()) {
-            Toast.makeText(this, "请填写所有字段", Toast.LENGTH_SHORT).show();
-        } else {
-            // 添加账单到数据库
-            databaseHelper.addBilling(date, type, amount, description);
+            // Validate the input fields.
+            if (date.isEmpty() || type.isEmpty() || amount.isEmpty()) {
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            } else {
+                // Add the billing details to the database.
+                databaseHelper.addBilling(date, type, amount, description);
 
-            // 创建新的账单对象
-            BillingItem newItem = new BillingItem(date, type, amount, description);
+                // Create a new billing item and update the list and adapter.
+                BillingItem newItem = new BillingItem("", date, type, amount, description);
+                billingList.add(0, newItem);
+                this.adapter.notifyItemInserted(0);
+                recyclerView.scrollToPosition(0);
 
-            // 更新账单列表
-            billingList.add(0, newItem); // 添加到列表顶部
-            adapter.getItemId(0); // 通知 RecyclerView 插入数据
-            recyclerView.scrollToPosition(0); // 滚动到顶部
+                // Close the dialog and show a success toast message.
+                dialog.dismiss();
+                Toast.makeText(this, "Billing added", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-            dialog.dismiss();
-            Toast.makeText(this, "账单已添加", Toast.LENGTH_SHORT).show();
-        }
-    });
-
-    dialog.show();
-}
-
+        dialog.show();
+    }
 }

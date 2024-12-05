@@ -28,73 +28,78 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // 初始化Firebase Auth
+        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        // 初始化UI组件
+        // Initialize UI components
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
         registerButton = findViewById(R.id.registerButton);
         loginLink = findViewById(R.id.loginLink);
 
-        // 设置注册按钮点击事件
+        /**
+         * Sets up click listener for the register button.
+         * Validates user input and registers a new user using Firebase Authentication.
+         */
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                // 获取用户输入的邮箱和密码
+                // Get user input from EditText fields
                 String email = emailEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
                 String confirmPassword = confirmPasswordEditText.getText().toString().trim();
 
-                // 检查输入是否为空
+                // Check if any of the fields are empty
                 if (TextUtils.isEmpty(email)) {
-                    emailEditText.setError("请输入邮箱");
+                    emailEditText.setError("Please enter your email");
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {
-                    passwordEditText.setError("请输入密码");
+                    passwordEditText.setError("Please enter your password");
                     return;
                 }
 
                 if (TextUtils.isEmpty(confirmPassword)) {
-                    confirmPasswordEditText.setError("请确认密码");
+                    confirmPasswordEditText.setError("Please confirm your password");
                     return;
                 }
 
-                // 检查密码是否一致
+                // Check if passwords match
                 if (!password.equals(confirmPassword)) {
-                    confirmPasswordEditText.setError("密码不匹配");
+                    confirmPasswordEditText.setError("Passwords do not match");
                     return;
                 }
 
-                // 使用FirebaseAuth创建用户
+                /**
+                 * Creates a new user with the provided email and password using Firebase Authentication.
+                 * Sends a verification email upon successful registration.
+                 */
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    // 注册成功，发送验证邮件
+                                    // Registration successful, send verification email
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     user.sendEmailVerification()
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(RegisterActivity.this,
-                                                            "注册成功，请检查您的邮箱进行验证", Toast.LENGTH_SHORT).show();
-                                                    // 跳转到登录界面或主界面
-                                                } else {
-                                                    Toast.makeText(RegisterActivity.this,
-                                                            "发送验证邮件失败：" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(RegisterActivity.this,
+                                                                "Registration successful, please verify your email", Toast.LENGTH_SHORT).show();
+                                                        // Redirect to login screen or main screen
+                                                    } else {
+                                                        Toast.makeText(RegisterActivity.this,
+                                                                "Failed to send verification email: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
                                 } else {
-                                    // 如果注册失败，显示错误信息
-                                    Toast.makeText(RegisterActivity.this, "注册失败：" + task.getException().getMessage(),
+                                    // If registration fails, display error message
+                                    Toast.makeText(RegisterActivity.this, "Registration failed: " + task.getException().getMessage(),
                                             Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -102,14 +107,17 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        // 设置登录链接点击事件
+        /**
+         * Sets up click listener for the login link.
+         * Navigates to the login screen when clicked.
+         */
         loginLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-               startActivity(intent);
-               finish();
-                // 可以跳转到登录界面
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+                // Navigate to login screen
             }
         });
     }

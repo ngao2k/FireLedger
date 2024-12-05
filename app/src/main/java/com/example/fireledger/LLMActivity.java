@@ -19,6 +19,9 @@ import java.util.concurrent.Executors;
 
 import io.noties.markwon.Markwon;
 
+/**
+ * An activity for performing analysis on billing data using a Spark model and displaying the results.
+ */
 public class LLMActivity extends AppCompatActivity {
     private TextView titleText;
     private TextView resultText;
@@ -35,7 +38,7 @@ public class LLMActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_llm);
 
-        // 初始化视图组件
+        // Initialize view components
         titleText = findViewById(R.id.titleText);
         resultText = findViewById(R.id.llmresultText);
         resultScrollView = findViewById(R.id.resultScrollView);
@@ -43,22 +46,25 @@ public class LLMActivity extends AppCompatActivity {
 
         databaseHelper = new BillingDatabaseHelper(this);
 
-        // 初始化 Spark 模型和线程池
+        // Initialize the Spark model and thread pool
         spark = new Spark();
         executorService = Executors.newSingleThreadExecutor();
 
-        // 返回按钮功能
+        // Set up back button functionality
         backButton.setOnClickListener(v -> finish());
 
-        // 显示月份选择
+        // Display month selection dialog
         showMonthSelectionDialog();
     }
 
+    /**
+     * Shows a dialog for the user to select a month from available billing data.
+     */
     private void showMonthSelectionDialog() {
         List<String> availableMonths = databaseHelper.getAvailableMonths();
         Log.d("LLMActivity", "Available Months: " + availableMonths);
         if (availableMonths.isEmpty()) {
-            Toast.makeText(this, "无可用账单数据", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No available billing data", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -66,65 +72,76 @@ public class LLMActivity extends AppCompatActivity {
         String[] monthArray = availableMonths.toArray(new String[0]);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("选择分析月份")
+        builder.setTitle("Select Analysis Month")
                 .setItems(monthArray, (dialog, which) -> {
                     selectedMonth = monthArray[which];
-                    Toast.makeText(this, "选择月份: " + selectedMonth, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Selected Month: " + selectedMonth, Toast.LENGTH_SHORT).show();
                     performAnalysis(selectedMonth);
                 })
                 .setCancelable(false);
         builder.create().show();
     }
 
+    /**
+     * Performs analysis on the selected month's billing data using the Spark model.
+     *
+     * @param month The month of billing data to analyze.
+     */
     private void performAnalysis(String month) {
         List<BillingItem> bills = databaseHelper.getBillingsByMonth(month);
         if (bills.isEmpty()) {
-            resultText.setText("所选月份无账单数据");
+            resultText.setText("No billing data for the selected month");
             return;
         }
 
-        // 拼接月度账单数据
-        StringBuilder aggregatedData = new StringBuilder("以下是").append(month).append("的账单数据:");
+        // Concatenate monthly billing data into a string
+        StringBuilder aggregatedData = new StringBuilder("Below is the billing data for ").append(month).append(":");
         for (BillingItem bill : bills) {
-            aggregatedData.append("- 日期：").append(bill.getDate()).append(",")
-                    .append("，类型：").append(bill.getType()).append(",")
-                    .append("，金额：$").append(bill.getAmount()).append(",")
-                    .append("，备注：").append(bill.getDescription()).append(".");
+            aggregatedData.append("- Date: ").append(bill.getDate()).append(",")
+                    .append(" Type: ").append(bill.getType()).append(",")
+                    .append(" Amount: $").append(bill.getAmount()).append(",")
+                    .append(" Description: ").append(bill.getDescription()).append(".");
         }
-        aggregatedData.append("请分析这份账单并提供建议。");
+        aggregatedData.append(" Please analyze this bill and provide recommendations. Answer in English.");
 
-        // 显示加载提示
-        resultText.setText("正在分析" + month + "的数据，请稍候...");
+        // Show loading message
+        resultText.setText("Analyzing " + month + " data, please wait...");
 
-        // 后台调用 Spark 模型
+        // Call the Spark model in the background
         executorService.execute(() -> {
             try {
                 Log.d("LLMActivity", "Aggregated Data: " + aggregatedData.toString());
                 String analysisResult = spark.request(aggregatedData.toString());
 
-                // 更新分析结果
+                // Update UI with analysis results
                 runOnUiThread(() -> updateAnalysisResults(analysisResult));
 
             } catch (IOException e) {
-                runOnUiThread(() -> Toast.makeText(LLMActivity.this, "网络错误，请稍后重试。", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(LLMActivity.this, "Network error, please try again later.", Toast.LENGTH_SHORT).show());
             } catch (JSONException e) {
-                runOnUiThread(() -> Toast.makeText(LLMActivity.this, "数据解析错误，请联系支持团队。", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(LLMActivity.this, "Data parsing error, please contact support team.", Toast.LENGTH_SHORT).show());
             }
         });
     }
 
+    /**
+     * Updates the UI with the analysis results rendered as Markdown.
+     *
+     * @param result The analysis result text to display.
+     */
     private void updateAnalysisResults(String result) {
-        // 使用 Markwon 渲染 Markdown
+        // Render Markdown using Markwon
         Markwon markwon = Markwon.create(this);
         markwon.setMarkdown(resultText, result);
 
-        // 自动滚动到顶部
+        // Automatically scroll to top
         resultScrollView.post(() -> resultScrollView.fullScroll(ScrollView.FOCUS_UP));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // Shutdown the executor service when the activity is destroyed
         executorService.shutdown();
     }
 }
